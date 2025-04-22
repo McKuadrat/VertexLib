@@ -26,7 +26,7 @@ Name = <String> -- Name Of Tab.
 
 # Making Button
 ```lua
-Tab2.AddButton({
+Tab.AddButton({
 	Name = "Button",
 	OnClick = function()
 		print("Hello")
