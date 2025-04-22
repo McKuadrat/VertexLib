@@ -118,5 +118,5 @@ Window.Delete()
 This Is Still In Beta Stage, And If I Find Any Bugs I Apologize, And Enjoy!
 
 # Creator
-Programmer : MC Kuadrat\n
-Designer : MC Kuadrat
+## Programmer : MC Kuadrat
+## Designer : MC Kuadrat
