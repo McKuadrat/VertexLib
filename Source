@@ -13,7 +13,7 @@ local function updateCanvasSize(scrollFrame)
 end
 
 function UI.MakeWindow(params)
-	wait(math.random(1, 13))
+	wait(math.random(1, 1))
 	-- Gui to Lua
 	-- Version: 3.6
 
@@ -268,7 +268,26 @@ function UI.MakeWindow(params)
 		updateCanvasSize(TabMenu)
 
 		local g = {}
-
+		
+		function g.AddSection(kok)
+			local section = Instance.new("TextLabel")
+			
+			section.Name = kok.Name
+			section.Text = "  "..kok.Name
+			section.TextColor3 = Color3.new(0.478431, 0.478431, 0.478431)
+			section.BackgroundTransparency = 1
+			section.Font = Enum.Font.FredokaOne
+			section.TextSize = 16.000
+			section.TextWrapped = true
+			section.Size = UDim2.new(0, 401, 0, 33)
+			section.Parent = Menu
+			section.BorderColor3 = Color3.new(1, 1, 1)
+			section.TextXAlignment = Enum.TextXAlignment.Left
+			section.BorderSizePixel = 1
+			
+			updateCanvasSize(Menu)
+		end
+		
 		function g.AddButton(pr)
 			local UIStroke_9 = Instance.new("UIStroke")
 			local UICorner_8 = Instance.new("UICorner")
@@ -341,6 +360,12 @@ function UI.MakeWindow(params)
 			UICorner_9.Parent = TextBox
 
 			updateCanvasSize(Menu)
+			
+			TextBox:GetPropertyChangedSignal("Text"):Connect(function()
+				if textboxx.OnChange then
+					textboxx.OnChange(TextBox.Text)
+				end
+			end)
 			
 			local txtbx = {}
 			
@@ -415,17 +440,240 @@ function UI.MakeWindow(params)
 					running = false
 				end
 			end)
+			
+			updateCanvasSize(Menu)
+		end
+		
+		function g.AddSlider(params)
+			local sliderFrame = Instance.new("Frame")
+			sliderFrame.Size = UDim2.new(0, 401, 0, 30)
+			sliderFrame.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
+			sliderFrame.Parent = Menu
+			sliderFrame.Name = params.Name
+			
+			local UiCorner = Instance.new("UICorner")
+			UiCorner.Parent = sliderFrame
+			
+			local UiStroke = Instance.new("UIStroke")
+			UiStroke.Color = Color3.new(1, 1, 1)
+			UiStroke.Parent = sliderFrame
 
+			local bar = Instance.new("Frame", sliderFrame)
+			bar.Position = UDim2.new(0, 10, 0.5, -2)
+			bar.Size = UDim2.new(1, -20, 0, 4)
+			bar.BackgroundColor3 = Color3.fromRGB(100, 100, 100)
+
+			local handle = Instance.new("Frame", bar)
+			handle.Size = UDim2.new(0, 10, 0, 10)
+			handle.Position = UDim2.new(0, 0, -0.75, 0)
+			handle.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+			handle.BorderSizePixel = 0
+			handle.Name = "Handle"
+			
+			local UiCornerr = Instance.new("UICorner")
+			UiCornerr.Parent = handle
+
+			local valueLabel = Instance.new("TextLabel", sliderFrame)
+			valueLabel.Position = UDim2.new(0, 3, 0, -8)
+			valueLabel.Size = UDim2.new(0, 40, 0, 30)
+			valueLabel.Text = params.Name.." : "..tostring(params.Min)
+			valueLabel.TextColor3 = Color3.new(1,1,1)
+			valueLabel.TextSize = 15.000
+			valueLabel.Font = Enum.Font.FredokaOne
+			valueLabel.BackgroundTransparency = 1
+
+			local dragging = false
+			local min, max = params.Min or 0, params.Max or 100
+			local value = min
+
+			handle.InputBegan:Connect(function(input)
+				if input.UserInputType == Enum.UserInputType.MouseButton1 then
+					dragging = true
+				end
+			end)
+
+			game:GetService("UserInputService").InputEnded:Connect(function(input)
+				if input.UserInputType == Enum.UserInputType.MouseButton1 then
+					dragging = false
+				end
+			end)
+
+			game:GetService("RunService").RenderStepped:Connect(function()
+				if dragging then
+					local mouseX = game:GetService("UserInputService"):GetMouseLocation().X
+					local barAbsPos = bar.AbsolutePosition.X
+					local barAbsSize = bar.AbsoluteSize.X
+					local offset = math.clamp(mouseX - barAbsPos, 0, barAbsSize)
+
+					local percent = offset / barAbsSize
+					value = math.floor((max - min) * percent + min)
+					handle.Position = UDim2.new(offset / barAbsSize, -5, -0.75, 0)
+					valueLabel.Text = params.Name.." : "..tostring(value)
+
+					if params.Script then
+						params.Script(value)
+					end
+				end
+			end)
+			
+			updateCanvasSize(Menu)
+			
+			local abc = {}
+			
+			function abc.GetValue()
+				return value
+			end
+			
+			return abc
+		end
+		
+		function g.AddDropDown(priri)
+			local dropdown = Instance.new("TextButton")
+			dropdown.Name = priri.Name
+			dropdown.Text = priri.Default or "Select"
+			dropdown.Parent = Menu
+			dropdown.Size = UDim2.new(0, 401, 0, 33)
+			dropdown.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
+			dropdown.TextColor3 = Color3.fromRGB(255, 255, 255)
+			dropdown.Font = Enum.Font.FredokaOne
+			dropdown.TextScaled = true
+			dropdown.TextXAlignment = Enum.TextXAlignment.Left
+			
+			local ImageLabel_2 = Instance.new("ImageLabel")
+			ImageLabel_2.Parent = dropdown
+			ImageLabel_2.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+			ImageLabel_2.BackgroundTransparency = 1.000
+			ImageLabel_2.BorderColor3 = Color3.fromRGB(0, 0, 0)
+			ImageLabel_2.BorderSizePixel = 0
+			ImageLabel_2.Position = UDim2.new(0.899999976, 0, 0.120999999, 0)
+			ImageLabel_2.Size = UDim2.new(0, 25, 0, 25)
+			ImageLabel_2.Image = "rbxassetid://99034290227012"
+			
+			local ucorner = Instance.new("UICorner")
+			ucorner.Parent = dropdown
+			
+			local ustruk = Instance.new("UIStroke")
+			ustruk.Parent = dropdown
+			ustruk.Color = Color3.new(1, 1, 1)
+			ustruk.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+
+			local listFrame = Instance.new("Frame")
+			listFrame.Visible = false
+			listFrame.Size = UDim2.new(0, 401, 0, (#priri.Options * 30) + 15)
+			listFrame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+			listFrame.Parent = Menu
+			listFrame.Position = UDim2.new(0, 0, 0, dropdown.AbsolutePosition.Y + dropdown.AbsoluteSize.Y)
+			
+			local UIListLayout = Instance.new("UIListLayout")
+			UIListLayout.Parent = listFrame
+			UIListLayout.SortOrder = Enum.SortOrder.LayoutOrder
+			UIListLayout.Padding = UDim.new(0, 5)
+
+			local value = priri.Default or priri.Options[1]
+
+			for _, option in ipairs(priri.Options) do
+				local btn = Instance.new("TextButton")
+				btn.Text = option
+				btn.Parent = listFrame
+				btn.Size = UDim2.new(0, 401, 0, 30)
+				btn.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+				btn.TextColor3 = Color3.fromRGB(255, 255, 255)
+				btn.Font = Enum.Font.FredokaOne
+				btn.TextScaled = true
+				
+				local ucornerr = Instance.new("UICorner")
+				ucornerr.Parent = btn
+
+				local ustrukk = Instance.new("UIStroke")
+				ustrukk.Parent = btn
+				ustrukk.Color = Color3.new(1, 1, 1)
+				ustrukk.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+				
+				btn.MouseButton1Click:Connect(function()
+					value = option
+					dropdown.Text = option
+					listFrame.Visible = false
+					ImageLabel_2.Image = "rbxassetid://99034290227012"
+					
+					if priri.OnChange then
+						priri.OnChange(option)
+					end
+					
+					updateCanvasSize(Menu)
+				end)
+			end
+
+			dropdown.MouseButton1Click:Connect(function()
+				listFrame.Visible = not listFrame.Visible
+				if ImageLabel_2.Image == "rbxassetid://103256317191387" then
+					ImageLabel_2.Image = "rbxassetid://99034290227012"
+				else
+					ImageLabel_2.Image = "rbxassetid://103256317191387"
+				end
+				updateCanvasSize(Menu)
+			end)
+			
+			updateCanvasSize(Menu)
+			
+			local abc = {}
+			function abc.GetValue()
+				return value
+			end
+
+			return abc
+		end
+		
+		function g.AddParagraph(data)
+			local paragraph = Instance.new("TextButton")
+			paragraph.Name = data.Name or "Paragraph"
+			paragraph.Parent = Menu -- atau Section kalau kamu udah pakai section
+			paragraph.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+			paragraph.Size = UDim2.new(0, 401, 0, 33)
+			paragraph.Text = string.sub(data.Text, 1, 25).."..."
+			paragraph.TextColor3 = Color3.fromRGB(255, 255, 255)
+			paragraph.TextWrapped = true
+			paragraph.Font = Enum.Font.FredokaOne
+			paragraph.TextSize = 14
+			paragraph.TextXAlignment = Enum.TextXAlignment.Left
+			
+			local ucornerr = Instance.new("UICorner")
+			ucornerr.Parent = paragraph
+
+			local ustrukk = Instance.new("UIStroke")
+			ustrukk.Parent = paragraph
+			ustrukk.Color = Color3.new(1, 1, 1)
+			ustrukk.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+
+			local expanded = false
+			local fullText = data.Text or "Teks paragraf panjang di sini..."
+
+			paragraph.MouseButton1Click:Connect(function()
+				if not expanded then
+					expanded = true
+					paragraph.Text = fullText
+					paragraph.AutomaticSize = Enum.AutomaticSize.Y
+					paragraph.Size = paragraph.Size + UDim2.new(0, 0, 0, 15)
+					updateCanvasSize(Menu)
+				else
+					expanded = false
+					paragraph.Text = string.sub(data.Text, 1, 25).."..."
+					paragraph.Size = UDim2.new(0, 401, 0, 33)
+					updateCanvasSize(Menu)
+				end
+			end)
+			
+			updateCanvasSize(Menu)
 		end
 
+		
 		return g
 	end
-
+	
 	return win
 end
 
-function UI.RandomNumber(min, max)
-	local n = math.random(min, max)
+function UI.RandomNumber(Min, Max)
+	local n = math.random(Min, Max)
 	return n
 end
 
