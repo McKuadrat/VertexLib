@@ -53,7 +53,7 @@ OnClick = <Functtion> -- Function for the button.
 # Making DropDown
 ```lua
 local DropDown = Tab.AddDropDown({
-	Name = "Tes",
+	Name = "DropDown",
 	Options = {"1", "2},
 	Default = "1",
 	OnChange = function(Value)
@@ -142,7 +142,7 @@ VirtexLib.GetUserImage()
 
 # Making Paragraph
 ```lua
-Tab2.AddParagraph({
+Tab.AddParagraph({
 	Name = "Paragraph",
 	Text = "Hi, this is paragraph, you can write anything in here!"
 })
