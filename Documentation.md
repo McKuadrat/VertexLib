@@ -24,6 +24,17 @@ Name = <String> -- Name Of Tab.
 ]]
 ```
 
+# Making Sections
+```lua
+Tab.AddSection({
+	Name = "Local Player"
+})
+
+--[[
+Name : <String> -- Name Of The Sections
+]]
+```
+
 # Making Button
 ```lua
 Tab.AddButton({
@@ -37,6 +48,30 @@ Tab.AddButton({
 Name = <Sttring> -- Name Of The Button.
 OnClick = <Functtion> -- Function for the button.
 ]]
+```
+
+# Making DropDown
+```lua
+local DropDown = Tab.AddDropDown({
+	Name = "Tes",
+	Options = {"1", "2},
+	Default = "1",
+	OnChange = function(Value)
+		print(Value)
+	end
+})
+
+--[[
+Name : <String> -- Name Of The DropDown.
+Options : <Table> -- The options in the DropDown.
+Default : <String> -- The Default Value In DropDown.
+OnChange : <Function> -- The Function Of DropDown.
+]]
+```
+
+## Getting DropDown Value
+```lua
+DropDown.GetValue()
 ```
 
 # Making TextBox
@@ -76,10 +111,46 @@ OnClick = <Function> -- The Function Of The TextBox.
 ]]
 ```
 
+# Making Slider
+```lua
+local Slider = Tab.AddSlider({
+	Name = "Tes",
+	Min = 1,
+	Max = 10,
+	Script = function(Value)
+		print(Value)
+	end
+})
+
+--[[
+Name : <String> -- Name Of Slider
+Min : <Number> -- Minimum Of Slider Value
+Max : <Number> -- Maximum Of Sider Value
+Script : <Function> -- Function When Slider Changing Value
+]]
+```
+
+## Getting Slider Value
+```lua
+Slider.GetValue()
+```
 
 ## Getting User Image
 ```lua
 VirtexLib.GetUserImage()
+```
+
+# Making Paragraph
+```lua
+Tab2.AddParagraph({
+	Name = "Paragraph",
+	Text = "Hi, this is paragraph, you can write anything in here!"
+})
+
+--[[
+Name : <String> -- Name Of The Paragraph
+Text = <String> -- Content Of The Paragraph
+]]
 ```
 
 # Notifying User
