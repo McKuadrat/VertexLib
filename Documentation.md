@@ -1,4 +1,4 @@
-# VirtexUI Library
+# VertexUI Library
 This guide for using VirtexUI Library!
 
 # Booting The Gui
