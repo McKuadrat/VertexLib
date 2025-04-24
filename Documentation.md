@@ -50,6 +50,21 @@ OnClick = <Functtion> -- Function for the button.
 ]]
 ```
 
+# Making KeyBinds
+```lua
+Window.Keybinds({
+	Key = "E",
+	OnClick = function()
+		print("Hello")
+	end,
+})
+
+--[[
+Key = <String> -- Key For The Keybinds.
+Onclick = <Function> -- Funtion For The Keybinds.
+]]
+```
+
 # Making DropDown
 ```lua
 local DropDown = Tab.AddDropDown({
@@ -72,6 +87,29 @@ OnChange : <Function> -- The Function Of DropDown.
 ## Getting DropDown Value
 ```lua
 DropDown.GetValue()
+```
+
+# Making Minimize Key Shortcut
+```lua
+Window.ShortCut(Enum.KeyCode.V)
+```
+
+## Playsound
+```lua
+Window.Playsound({
+	Name = "Playsound1",
+	ID = "1848354536"
+})
+
+--[[
+Name = <String> -- Name Of The Playsound
+ID = <String> -- Music ID To Play
+]]
+```
+
+## Stopsound
+```
+Window.StopSound("Playsound1")
 ```
 
 # Making TextBox
