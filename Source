@@ -485,85 +485,92 @@ function UI.MakeWindow(params)
 		
 		function g.AddSlider(params)
 			local sliderFrame = Instance.new("Frame")
-			sliderFrame.Size = UDim2.new(0, 401, 0, 30)
-			sliderFrame.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
-			sliderFrame.Parent = Menu
-			sliderFrame.Name = params.Name
-			
-			local UiCorner = Instance.new("UICorner")
-			UiCorner.Parent = sliderFrame
-			
-			local UiStroke = Instance.new("UIStroke")
-			UiStroke.Color = Color3.new(1, 1, 1)
-			UiStroke.Parent = sliderFrame
+sliderFrame.Size = UDim2.new(0, 401, 0, 30)
+sliderFrame.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
+sliderFrame.Parent = Menu
+sliderFrame.Name = params.Name
 
-			local bar = Instance.new("Frame", sliderFrame)
-			bar.Position = UDim2.new(0, 10, 0.5, -2)
-			bar.Size = UDim2.new(1, -20, 0, 4)
-			bar.BackgroundColor3 = Color3.fromRGB(100, 100, 100)
+local UiCorner = Instance.new("UICorner")
+UiCorner.Parent = sliderFrame
 
-			local handle = Instance.new("Frame", bar)
-			handle.Size = UDim2.new(0, 10, 0, 10)
-			handle.Position = UDim2.new(0, 0, -0.75, 0)
-			handle.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-			handle.BorderSizePixel = 0
-			handle.Name = "Handle"
-			
-			local UiCornerr = Instance.new("UICorner")
-			UiCornerr.Parent = handle
+local UiStroke = Instance.new("UIStroke")
+UiStroke.Color = Color3.new(1, 1, 1)
+UiStroke.Parent = sliderFrame
 
-			local valueLabel = Instance.new("TextLabel", sliderFrame)
-			valueLabel.Position = UDim2.new(0, 3, 0, -8)
-			valueLabel.Size = UDim2.new(0, 40, 0, 30)
-			valueLabel.Text = params.Name.." : "..tostring(params.Min)
-			valueLabel.TextColor3 = Color3.new(1,1,1)
-			valueLabel.TextSize = 15.000
-			valueLabel.Font = Enum.Font.FredokaOne
-			valueLabel.BackgroundTransparency = 1
+local bar = Instance.new("Frame", sliderFrame)
+bar.Position = UDim2.new(0, 10, 0.5, -2)
+bar.Size = UDim2.new(1, -20, 0, 4)
+bar.BackgroundColor3 = Color3.fromRGB(100, 100, 100)
 
-			local dragging = false
-			local min, max = params.Min or 0, params.Max or 100
-			local value = min
+local handle = Instance.new("Frame", bar)
+handle.Size = UDim2.new(0, 10, 0, 10)
+handle.Position = UDim2.new(0, 0, -0.75, 0)
+handle.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+handle.BorderSizePixel = 0
+handle.Name = "Handle"
 
-			handle.InputBegan:Connect(function(input)
-				if input.UserInputType == Enum.UserInputType.MouseButton1 then
-					dragging = true
-				end
-			end)
+local UiCornerr = Instance.new("UICorner")
+UiCornerr.Parent = handle
 
-			game:GetService("UserInputService").InputEnded:Connect(function(input)
-				if input.UserInputType == Enum.UserInputType.MouseButton1 then
-					dragging = false
-				end
-			end)
+local valueLabel = Instance.new("TextLabel", sliderFrame)
+valueLabel.Position = UDim2.new(0, 3, 0, -8)
+valueLabel.Size = UDim2.new(0, 40, 0, 30)
+valueLabel.Text = params.Name.." : "..tostring(params.Min)
+valueLabel.TextColor3 = Color3.new(1,1,1)
+valueLabel.TextSize = 15.000
+valueLabel.Font = Enum.Font.FredokaOne
+valueLabel.BackgroundTransparency = 1
 
-			game:GetService("RunService").RenderStepped:Connect(function()
-				if dragging then
-					local mouseX = game:GetService("UserInputService"):GetMouseLocation().X
-					local barAbsPos = bar.AbsolutePosition.X
-					local barAbsSize = bar.AbsoluteSize.X
-					local offset = math.clamp(mouseX - barAbsPos, 0, barAbsSize)
+local dragging = false
+local min, max = params.Min or 0, params.Max or 100
+local value = min
 
-					local percent = offset / barAbsSize
-					value = math.floor((max - min) * percent + min)
-					handle.Position = UDim2.new(offset / barAbsSize, -5, -0.75, 0)
-					valueLabel.Text = params.Name.." : "..tostring(value)
+-- For mobile touch support
+handle.InputBegan:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.Touch or input.UserInputType == Enum.UserInputType.MouseButton1 then
+        dragging = true
+    end
+end)
 
-					if params.Script then
-						params.Script(value)
-					end
-				end
-			end)
-			
-			updateCanvasSize(Menu)
-			
-			local abc = {}
-			
-			function abc.GetValue()
-				return value
-			end
-			
-			return abc
+game:GetService("UserInputService").InputEnded:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.Touch or input.UserInputType == Enum.UserInputType.MouseButton1 then
+        dragging = false
+    end
+end)
+
+game:GetService("RunService").RenderStepped:Connect(function()
+    if dragging then
+        local inputPos
+        if game:GetService("UserInputService"):TouchEnabled then
+            inputPos = game:GetService("UserInputService"):GetTouchPositions()[1].X
+        else
+            inputPos = game:GetService("UserInputService"):GetMouseLocation().X
+        end
+
+        local barAbsPos = bar.AbsolutePosition.X
+        local barAbsSize = bar.AbsoluteSize.X
+        local offset = math.clamp(inputPos - barAbsPos, 0, barAbsSize)
+
+        local percent = offset / barAbsSize
+        value = math.floor((max - min) * percent + min)
+        handle.Position = UDim2.new(offset / barAbsSize, -5, -0.75, 0)
+        valueLabel.Text = params.Name.." : "..tostring(value)
+
+        if params.Script then
+            params.Script(value)
+        end
+    end
+end)
+
+updateCanvasSize(Menu)
+
+local abc = {}
+
+function abc.GetValue()
+    return value
+end
+
+return abc
 		end
 		
 		function g.AddDropDown(priri)
