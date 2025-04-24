@@ -204,6 +204,45 @@ function UI.MakeWindow(params)
 	function win.Delete()
 		VertexUIGUI:Destroy()
 	end
+	
+	function win.ShortCut(r)
+		local UserInputService = game:GetService("UserInputService")
+		
+		UserInputService.InputBegan:Connect(function(input, gameProcessed)
+			if gameProcessed then return end -- Biar nggak ganggu UI atau Chat
+
+			if input.KeyCode == r then
+				Frame.Visible = not Frame.Visible
+			end
+		end)
+	end
+	
+	function win.Keybinds(y)
+		local UserInputService = game:GetService("UserInputService")
+
+		UserInputService.InputBegan:Connect(function(input, gameProcessed)
+			if gameProcessed then return end -- Biar nggak ganggu UI atau Chat
+
+			if input.KeyCode == Enum.KeyCode[y.Key] then
+				if y.OnClick then y.OnClick() end
+			end
+		end)
+	end
+	
+	function win.Playsound(lsk)
+		local music = Instance.new("Sound")
+		music.Parent = VertexUIGUI
+		music.SoundId = "rbxassetid://"..lsk.ID
+		music.Name = lsk.Name
+		music:Play()
+		wait(1)
+		wait(music.TimeLength - 1)
+		music:Destroy()
+	end
+	
+	function win.StopSound(j)
+		VertexUIGUI:FindFirstChild(tostring(j)):Destroy()
+	end
 
 	function win.AddTab(Tabi)
 		local UIStroke_6 = Instance.new("UIStroke")
@@ -633,8 +672,9 @@ function UI.MakeWindow(params)
 			paragraph.TextColor3 = Color3.fromRGB(255, 255, 255)
 			paragraph.TextWrapped = true
 			paragraph.Font = Enum.Font.FredokaOne
-			paragraph.TextSize = 14
+			paragraph.TextSize = 16
 			paragraph.TextXAlignment = Enum.TextXAlignment.Left
+			paragraph.TextYAlignment = Enum.TextYAlignment.Top
 			
 			local ucornerr = Instance.new("UICorner")
 			ucornerr.Parent = paragraph
@@ -677,6 +717,8 @@ function UI.RandomNumber(Min, Max)
 	return n
 end
 
+
+
 function UI.Respawn()
 	Players.LocalPlayer.Character.Humanoid.Health = 0
 end
@@ -693,6 +735,10 @@ function UI.Notification(data)
 		Duration = data.Time or 5,
 		Icon = data.Image or ""
 	})
+end
+
+function UI.GetSpeed ()
+	return game.Players.LocalPlayer.Character.Humanoid.WalkSpeed
 end
 
 return UI
