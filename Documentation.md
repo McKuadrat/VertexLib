@@ -3,7 +3,7 @@ This guide for using VirtexUI Library!
 
 # Booting The Gui
 ```lua
-local VirtexLib = loadstring(game:HttpGet(('https://raw.githubusercontent.com/McKuadrat/VirtexLib/refs/heads/main/Source')))()
+local VirtexLib = loadstring(game:HttpGet(('https://raw.githubusercontent.com/McKuadrat/VertexLib/refs/heads/main/Source')))()
 ```
 
 # Creating Window
